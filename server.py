@@ -8,9 +8,8 @@ Python 3.6 or newer required.
 """
 import os
 from flask import Flask, redirect, request
-
 import stripe
-# This is your test secret API key.
+
 SECRET_KEY = os.getenv("SEC_TEST_KEY")
 stripe.api_key = SECRET_KEY
 
@@ -22,13 +21,29 @@ YOUR_DOMAIN = 'http://localhost:4242'
 
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
+    name = request.form.get('name')
+    pricePerNight = float(request.form.get('pricePerNight'))*100  # Convert to cents!
+    currency = request.form.get('currency')
+    duration = request.form.get('duration')
+
+    # Test Data
+    # name = "MBS"
+    # pricePerNight = 5000*100
+    # currency = 'sgd'
+    # duration = 2
+
     try:
         checkout_session = stripe.checkout.Session.create(
             line_items=[
                 {
-                    # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                    'price': 'price_1OtTxoBGIiWthIetqfVy4dFi',
-                    'quantity': 1,
+                    'price_data': {
+                        'currency': currency,
+                        'unit_amount': pricePerNight,
+                        'product_data': {
+                            'name': name
+                        }
+                    },
+                    'quantity': duration,
                 },
             ],
             mode='payment',
