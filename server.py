@@ -10,7 +10,7 @@ import os
 from flask import Flask, redirect, request
 import stripe
 
-SECRET_KEY = os.getenv("SEC_TEST_KEY")
+SECRET_KEY = os.getenv("SEC_KEY")
 stripe.api_key = SECRET_KEY
 
 app = Flask(__name__,
@@ -25,12 +25,6 @@ def create_checkout_session():
     pricePerNight = float(request.form.get('pricePerNight'))*100  # Convert to cents!
     currency = request.form.get('currency')
     duration = request.form.get('duration')
-
-    # Test Data
-    # name = "MBS"
-    # pricePerNight = 5000*100
-    # currency = 'sgd'
-    # duration = 2
 
     try:
         checkout_session = stripe.checkout.Session.create(
@@ -47,9 +41,8 @@ def create_checkout_session():
                 },
             ],
             mode='payment',
-            success_url=YOUR_DOMAIN + '/success.html',
-            cancel_url=YOUR_DOMAIN + '/cancel.html',
-            automatic_tax={'enabled': True},
+            success_url=YOUR_DOMAIN + '?success=true',
+            cancel_url=YOUR_DOMAIN + '?canceled=true',
         )
     except Exception as e:
         return str(e)
