@@ -10,19 +10,21 @@ import os
 from flask import Flask, redirect, request
 import stripe
 
-SECRET_KEY = os.getenv("SEC_KEY")
+
+SECRET_KEY = os.environ.get("SECRET_KEY")
 stripe.api_key = SECRET_KEY
 
 app = Flask(__name__,
             static_url_path='',
             static_folder='public')
 
-YOUR_DOMAIN = 'http://localhost:4242'
+DOMAIN = os.environ.get("PAYMENT_URL")
+
 
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
     name = request.form.get('name')
-    pricePerNight = float(request.form.get('pricePerNight'))*100  # Convert to cents!
+    pricePerNight = int(request.form.get('pricePerNight'))*100  # Convert to cents!
     currency = request.form.get('currency')
     duration = request.form.get('duration')
 
@@ -41,13 +43,14 @@ def create_checkout_session():
                 },
             ],
             mode='payment',
-            success_url=YOUR_DOMAIN + '?success=true',
-            cancel_url=YOUR_DOMAIN + '?canceled=true',
+            success_url=DOMAIN + '?success=true',
+            cancel_url=DOMAIN + '?canceled=true',
         )
+        
     except Exception as e:
         return str(e)
 
     return redirect(checkout_session.url, code=303)
 
 if __name__ == '__main__':
-    app.run(port=4242)
+    app.run(port=4242, debug=True)
