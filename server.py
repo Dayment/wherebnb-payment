@@ -52,5 +52,6 @@ def create_checkout_session():
 
     return redirect(checkout_session.url, code=303)
 
+PORT = os.environ.get("PAYMENTS_PORT")
 if __name__ == '__main__':
-    app.run(port=3005, debug=os.environ.DEBUG)
+    app.run(port=PORT, debug=os.environ.DEBUG)
