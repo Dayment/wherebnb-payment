@@ -1,5 +1,5 @@
 #! /usr/bin/env python3.6
-# Run Flask app: python -m flask --app server run --port=4242
+# Run Flask app: python -m flask --app server run --port=3005
 # https://docs.stripe.com/checkout/quickstart?client=html
 """
 server.py
@@ -53,4 +53,4 @@ def create_checkout_session():
     return redirect(checkout_session.url, code=303)
 
 if __name__ == '__main__':
-    app.run(port=4242, debug=os.environ.DEBUG)
+    app.run(port=3005, debug=os.environ.DEBUG)
