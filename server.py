@@ -7,7 +7,7 @@ Stripe Sample.
 Python 3.6 or newer required.
 """
 import os
-from flask import Flask, redirect, request
+from flask import Flask, redirect, request, jsonify
 import stripe
 
 
@@ -43,14 +43,23 @@ def create_checkout_session():
                 },
             ],
             mode='payment',
-            success_url=DOMAIN + '?success=true',
-            cancel_url=DOMAIN + '?canceled=true',
+            success_url=DOMAIN + '/success',
+            cancel_url=DOMAIN + '/canceled',
         )
         
     except Exception as e:
         return str(e)
 
     return redirect(checkout_session.url, code=303)
+
+@app.route('/success')
+def success():
+    return jsonify({"status": "success", "message": "Payment Successful"})
+
+
+@app.route('/canceled')
+def canceled():
+    return jsonify({"status": "canceled", "message": "Payment Canceled"})
 
 PORT = os.environ.get("PAYMENTS_PORT")
 if __name__ == '__main__':

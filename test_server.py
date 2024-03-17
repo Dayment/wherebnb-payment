@@ -7,7 +7,7 @@ Stripe Sample.
 Python 3.6 or newer required.
 """
 import os
-from flask import Flask, redirect, request
+from flask import Flask, redirect, request, jsonify
 import stripe
 
 
@@ -21,10 +21,11 @@ app = Flask(__name__,
 DOMAIN = os.environ.get("PAYMENT_URL")
 
 
+
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
     name = "some hotel"
-    pricePerNight = 1000*100  # Convert to cents!
+    pricePerNight = 1000 * 100  # Convert to cents!
     currency = 'sgd'
     duration = 2
 
@@ -46,11 +47,20 @@ def create_checkout_session():
             success_url=DOMAIN + '/success.html',
             cancel_url=DOMAIN + '/canceled.html',
         )
-        
-    except Exception as e:
-        return str(e)
 
-    return redirect(checkout_session.url, code=303)
+        return redirect(checkout_session.url)
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@app.route('/success.html')
+def success():
+    return jsonify({"status": "success", "message": "Payment Successful"})
+
+
+@app.route('/canceled.html')
+def canceled():
+    return jsonify({"status": "canceled", "message": "Payment Canceled"})
 
 PORT = os.environ.get("PAYMENTS_PORT")
 if __name__ == '__main__':
