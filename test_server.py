@@ -44,8 +44,8 @@ def create_checkout_session():
                 },
             ],
             mode='payment',
-            success_url=DOMAIN + '/success.html',
-            cancel_url=DOMAIN + '/canceled.html',
+            success_url=DOMAIN + '/success',
+            cancel_url=DOMAIN + '/canceled',
         )
 
         return redirect(checkout_session.url)
@@ -53,12 +53,12 @@ def create_checkout_session():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
-@app.route('/success.html')
+@app.route('/success')
 def success():
     return jsonify({"status": "success", "message": "Payment Successful"})
 
 
-@app.route('/canceled.html')
+@app.route('/canceled')
 def canceled():
     return jsonify({"status": "canceled", "message": "Payment Canceled"})
 
