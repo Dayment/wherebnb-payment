@@ -23,18 +23,37 @@ app = Flask(__name__,
             static_folder='public')
 
 DOMAIN = os.environ.get("PAYMENT_URL")
+PROCESS_BOOKING_URL = os.environ.get("PROCESS_BOOKING_URL")
+FRONTEND_URL= os.environ.get("FRONTEND_URL")
 
 
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
-    print(request.form.get('name'), request.form.get('pricePerNight'))
     name = request.form.get('name')
     pricePerNight = int(request.form.get('pricePerNight'))*100  # Convert to cents!
     currency = request.form.get('currency')
-    duration = request.form.get('duration')
+    duration = int(request.form.get('duration'))
+    email = request.form.get('email')
+    guestId = request.form.get('guestId')
+    listingId = request.form.get('listingId')
+    startDate = request.form.get('startDate')
+    endDate = request.form.get('endDate')
+    hostId = request.form.get('hostId')
+
 
     try:
-        print('pricePerNight', request.form.get('pricePerNight'))
+        metadata = {
+            'email': email,
+            'guestId': guestId,
+            'listingId': listingId,
+            'hostId': hostId,
+            'startDate': startDate,
+            'endDate': endDate,
+            'totalPrice': pricePerNight * duration
+        }
+
+        print('metadata', pricePerNight,  duration)
+        print('metadata', metadata)
         checkout_session = stripe.checkout.Session.create(
             line_items=[
                 {
@@ -49,27 +68,18 @@ def create_checkout_session():
                 },
             ],
             mode='payment',
-            success_url=DOMAIN + '/success',
-            cancel_url=DOMAIN + '/canceled',
+            success_url=FRONTEND_URL + '/listings',
+            cancel_url=FRONTEND_URL + '/reservations',
+            metadata=metadata
         )
-        print(checkout_session.url)
+        print(checkout_session.id)
 
-        return jsonify({"checkout_url": checkout_session.url, "status": 303})
+        return jsonify({"checkout_url": checkout_session.url, 
+                        "session_id": checkout_session.id,
+                        "status": 303})
 
-        
     except Exception as e:
         return str(e), 500
     
-
-
-@app.route('/success')
-def success():
-    return jsonify({"status": "success", "message": "Payment Successful"})
-
-
-@app.route('/canceled')
-def canceled():
-    return jsonify({"status": "canceled", "message": "Payment Canceled"})
-
 if __name__ == '__main__':
     app.run(port=PORT, debug=DEBUG)
