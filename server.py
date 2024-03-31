@@ -82,4 +82,4 @@ def create_checkout_session():
         return str(e), 500
     
 if __name__ == '__main__':
-    app.run(port=PORT, debug=DEBUG)
+    app.run(port=PORT, debug=(DEBUG or False))
