@@ -68,7 +68,7 @@ def create_checkout_session():
                 },
             ],
             mode='payment',
-            success_url=FRONTEND_URL + '/listings',
+            success_url=FRONTEND_URL + '/',
             cancel_url=FRONTEND_URL + '/reservations',
             metadata=metadata
         )
