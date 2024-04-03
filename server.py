@@ -29,7 +29,7 @@ FRONTEND_URL= os.environ.get("FRONTEND_URL")
 
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
-    name = request.form.get('name')
+    name = request.form.get('propertyName')
     pricePerNight = int(request.form.get('pricePerNight'))*100  # Convert to cents!
     currency = request.form.get('currency')
     duration = int(request.form.get('duration'))
@@ -41,6 +41,9 @@ def create_checkout_session():
     hostId = request.form.get('hostId')
 
 
+    print('create-checkout-session', name, pricePerNight, currency, duration, email, guestId, listingId, startDate, endDate, hostId)
+
+
     try:
         metadata = {
             'email': email,
@@ -49,7 +52,8 @@ def create_checkout_session():
             'hostId': hostId,
             'startDate': startDate,
             'endDate': endDate,
-            'totalPrice': pricePerNight * duration
+            'totalPrice': pricePerNight * duration,
+            'propertyName': name
         }
 
         print('metadata', pricePerNight,  duration)
