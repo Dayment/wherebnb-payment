@@ -66,16 +66,16 @@ Replace `<your_stripe_secret_key>`, `<port_number>`, `<your_payment_url>`, `<you
 ### Building the Docker Image
 To build the Docker image, execute the following command in the project directory:
 ```bash
-docker build -t <dockerid>/server:3.0 --build-arg SECRET_KEY=<your_stripe_secret_key> --build-arg PAYMENTS_PORT=<port_number> --build-arg DEBUG=<true_or_false> --build-arg PAYMENT_URL=<your_payment_url> .
+docker build -t <dockerid>/server:1.0 --build-arg SECRET_KEY=<your_stripe_secret_key> --build-arg PAYMENTS_PORT=<port_number> --build-arg DEBUG=<true_or_false> --build-arg PAYMENT_URL=<your_payment_url> .
 ```
-Replace `<your_stripe_secret_key>`, `<port_number>`, `<your_payment_url>`, and `<true_or_false>` with your actual values.
+Replace `<dockerid>`, `<your_stripe_secret_key>`, `<port_number>`, `<your_payment_url>`, and `<true_or_false>` with your actual values.
 
 ### Running the Docker Container
 After building the Docker image, you can run the container using the following command:
 ```bash
-docker run -p <host_port>:<container_port> <dockerid>/server:3.0
+docker run -p <host_port>:<container_port> <dockerid>/server:1.0
 ```
-Replace `<host_port>` and `<container_port>` with the desired port mappings.
+Replace `<host_port>`, `<container_port>` and `<dockerid>` with the desired port mappings.
 
 The Flask application will be accessible at `http://localhost:<host_port>`.
 
