@@ -5,6 +5,7 @@ This is a Flask application for handling payments using Stripe.
 ## Requirements
 - Python 3.6 or newer
 - Stripe API secret key
+- Docker (if you want to containerize the application)
 
 ## Installation
 1. Clone the repository: `git clone https://github.com/yourusername/<your_project_name>.git`
